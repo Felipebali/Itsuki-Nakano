@@ -23,7 +23,7 @@ async function makeFkontak() {
 
 let handler = async (m, { conn, args }) => {
   try {
-    await conn.reply(m.chat, 'Actualizando itsuki 🍓', m, rcanalw)
+    await conn.reply(m.chat, 'Actualizando itsuki 🍓', m)
 
     const cmd = 'git --no-pager pull --rebase --autostash' + (args?.length ? ' ' + args.join(' ') : '')
     const output = execSync(cmd, { cwd: ROOT, encoding: 'utf8' })
@@ -52,7 +52,8 @@ let handler = async (m, { conn, args }) => {
     }
 
     const fq = await makeFkontak().catch(() => null)
-  await conn.reply(m.chat, response, fq || m, (typeof rcanalw === 'object' ? rcanalw : {}))
+    await conn.reply(m.chat, response, fq || m)
+
   } catch (error) {
     // Intentar detectar archivos con cambios locales o conflictos
     try {
@@ -78,7 +79,7 @@ let handler = async (m, { conn, args }) => {
           const conflictMsg = '⚠️ Conflictos o cambios locales detectados en los siguientes archivos:\n\n'
             + conflictedFiles.map(f => '• ' + f.slice(3)).join('\n')
             + '\n\n🔹 Para solucionarlo, haga backup y reinstale el bot o actualice manualmente.'
-          return await conn.reply(m.chat, conflictMsg, m, rcanalw)
+          return await conn.reply(m.chat, conflictMsg, m)
         }
       }
     } catch {}
@@ -86,7 +87,7 @@ let handler = async (m, { conn, args }) => {
     const msg = /not a git repository/i.test(error?.message || '')
       ? '❌ Este directorio no es un repositorio Git. Inicializa con `git init` y agrega el remoto antes de usar update.'
       : `❌ Error al actualizar: ${error?.message || 'Error desconocido.'}`
-    await conn.reply(m.chat, msg, m, rcanalw)
+    await conn.reply(m.chat, msg, m)
   }
 }
 
