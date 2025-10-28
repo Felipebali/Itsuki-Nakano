@@ -22,7 +22,7 @@ let handler = async function (m, { conn, isAdmin, isBotAdmin }) {
     const chat = global.db.data.chats[m.chat]
     if (!chat?.antiLink) return !0
 
-    const text = m.text
+    const text = m.text.trim()
     const who = m.sender
     const number = who.replace(/\D/g, '')
 
@@ -30,12 +30,15 @@ let handler = async function (m, { conn, isAdmin, isBotAdmin }) {
     const isChannelLink = channelLinkRegex.test(text)
     const isAnyLink = anyLinkRegex.test(text)
     const isAllowedLink = allowedLinks.test(text)
-    const isTagall = text.includes(tagallLink)
+    const isTagallLink = text.includes(tagallLink)
     const isIG = igLinkRegex.test(text)
     const isClash = clashLinkRegex.test(text)
 
-    // 🧨 Si manda el link del TagAll prohibido
-    if (isTagall) {
+    // 🧠 Ignorar comandos del bot o mensajes que empiezan con "."
+    if (text.startsWith('.')) return !0
+
+    // 🧨 Si manda el link del TagAll prohibido (no comando)
+    if (isTagallLink && !text.startsWith('.tagall')) {
       await conn.sendMessage(m.chat, {
         text: `😮‍💨 Qué compartís el tagall inútil @${who.split('@')[0]}...`,
         mentions: [who],
