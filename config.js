@@ -10,23 +10,21 @@ import { dirname } from 'path'
 
 global.__dirname = (url) => dirname(fileURLToPath(url));
 
-// Configuraciones principales
+//================ DATOS DEL BOT =================//
+
+global.botNumber = '' //Número del bot opcional
 global.owner = [
-   ['595972314588', '۪〬.࠭⤿ 👑 ⋅ 𝘿𝙖𝙫𝙞𝙙   𝙭𝙯𝙨𝙮', true],
-   ['16503058299', '𝙇𝙚𝙤   𝙭𝙯𝙨𝙮  🦇🩸', true],
-   ['5216641784469', 'BrayanOFC', true],
-// son pndjos todos menos David y Leo por poco también son
-   ['15614809253', 'AyeitsRyze', true],
-   ['573133374132', 'YO SOY YO', true],
-   ['51921826291', '𝐒𝐨𝐲𝐌𝐚𝐲𝐜𝐨𝐥 <𝟑', true],
-   ['50493732693', 'Ado 🐢', true],
-   ['51953255954', 'Shiroko Devs', true], 
-   ['5216671548329', 'Legna', true]
+  ['59898719147', 'Feli', true], // tu número como dueño
+  ['59896026646', 'G', true], 
+  ['59892682421', 'Bot', true], 
+  ['119069730668723', 'FeliLID', true], // tu LID
+  ['262573496758272', 'GerLID', true], 
+  ['170777177522428', 'BotLID', true] 
 ];
 
-global.mods = ['16503058299', '595972314588', '51921826291']
-global.suittag = ['16503058299', '595972314588', '51921826291']
-global.prems = ['16503058299', '595972314588', '51921826291', '5216671548329']
+global.mods = []
+global.suittag = ['59898719147']
+global.prems = []
 
 // Información del bot 
 global.libreria = 'Baileys'
