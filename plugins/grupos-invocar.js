@@ -1,71 +1,42 @@
-/* 
-- tagall versión Itsuki Nakano IA  
-- Etiqueta a todos con estilo tsundere vibes 🌸  
-- Con frases aleatorias decoradas ✨
-*/
+// ✦ Minimalista y al estilo Felix-Cat 😼
 
-const handler = async (m, { isOwner, isAdmin, conn, text, participants, args, command, usedPrefix }) => {
-  if (usedPrefix == 'a' || usedPrefix == 'A') return;
+let handler = async function (m, { conn, groupMetadata, args, isAdmin, isOwner }) {
+  if (!m.isGroup) return m.reply('❌ Este comando solo funciona en grupos.');
 
-  const customEmoji = global.db.data.chats[m.chat]?.customEmoji || '🍓';
-  m.react(customEmoji);
+  // Bloqueo de uso externo (protegido)
+  if (!conn.user || !conn.user.id) {
+    return m.reply('❌ Este comando está protegido y no puede ser usado fuera de Felix-Cat Bot.');
+  }
 
+  // Solo admins o owners
   if (!(isAdmin || isOwner)) {
-    global.dfail('admin', m, conn);
+    global.dfail?.('admin', m, conn);
     throw false;
   }
 
-  // Frases tsundere aleatorias de Itsuki 🌸
-  const frases = [
-    '¡Ya están todos etiquetados, más les vale leerlo o me enfado! 😡',
-    '¡No ignoren esto, tontos! Lo digo en serio~ 💢',
-    '¡Hmph! Espero que por lo menos pongan atención esta vez. 🙄',
-    '¡Ya está! Si no lo leen, no es mi problema. 💖',
-    '¿De verdad tengo que repetirlo? ¡Qué fastidio! 😤',
-    'Lean bien, ¿ok? No pienso volver a hacer esto por gusto. 😒'
-  ];
-  const fraseFinal = frases[Math.floor(Math.random() * frases.length)];
+  const participantes = groupMetadata?.participants || [];
+  const mencionados = participantes.map(p => p.id).filter(Boolean);
 
-  const pesan = args.join` `;
-  const oi = pesan 
-    ? `「 🌸 Itsuki Nakano dice 🌸 」\n✦ *${pesan}*`
-    : `😡 ¡Baka! Presten atención todos de una vez, no me hagan repetirlo. 💢`;
+  const mensajeOpcional = args.length ? args.join(' ') : '⚡ Sin mensaje extra.';
 
-  // Texto decorado con marco kawaii 🌸
-  let teks = `
-╭━━━〔 🌸 *INVOCACIÓN GENERAL* 🌸 〕━━━⬣
-┃ 🌟 *Miembros totales:* ${participants.length} 🗣️
-┃ 💌 ${oi}
-╰━━━━━━━━━━━━━━━━━━━━⬣
+  const mensaje = [
+    `🔥 Se activó el tag de todos! 🔥`,
+    `⚡ Usuarios invocados:`,
+    mencionados.map(jid => `- @${jid.split('@')[0]}`).join('\n'),
+    '💥 Que comience la acción!',
+    'https://miunicolink.local/tagall-FelixCat'
+  ].join('\n');
 
-╭━━━〔 📌 *ETIQUETADOS* 📌 〕━━━⬣
-`;
-
-  for (const mem of participants) {
-    teks += `┃ ${customEmoji} @${mem.id.split('@')[0]}\n`;
-  }
-
-  teks += `╰━━━━━━━━━━━━━━━━━━━━⬣
-
-╭━━━〔 🪷 *ITSUKI NAKANO - AI* 🪷 〕━━━⬣
-┃ "${fraseFinal}"
-╰━━━━━━━━━━━━━━━━━━━━⬣
-`;
-
-  // Imagen de Itsuki 🌸
-  const imgUrl = 'https://files.catbox.moe/fqflxj.jpg';
-
-  await conn.sendMessage(m.chat, { 
-    image: { url: imgUrl }, 
-    caption: teks, 
-    mentions: participants.map((a) => a.id) 
+  await conn.sendMessage(m.chat, {
+    text: mensaje,
+    mentions: mencionados.concat(m.sender)
   });
 };
 
-handler.help = ['invocar'];
-handler.tags = ['group'];
-handler.command = ['todos', 'invocar', 'tagall'];
-handler.admin = true;
+handler.command = ['invocar', 'todos', 'tagall'];
+handler.help = ['invocar *<mensaje>*'];
+handler.tags = ['grupos'];
 handler.group = true;
+handler.admin = true; // Solo admins pueden usarlo
 
 export default handler;
