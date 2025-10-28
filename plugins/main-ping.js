@@ -1,71 +1,71 @@
+import os from 'os'
+
 let handler = async (m, { conn }) => {
-  const ctxErr = (global.rcanalx || {})
-  const ctxWarn = (global.rcanalw || {})
-  const ctxOk = (global.rcanalr || {})
+    // Medición real del ping
+    const startTime = Date.now()
+    let sentMsg = await conn.sendMessage(m.chat, { text: '🏓 Calculando ping real...' }, { quoted: m })
+    const endTime = Date.now()
+    const realPing = endTime - startTime
 
-  try {
-    // Tiempo inicial
-    const start = Date.now()
+    // Información del sistema
+    const arch = os.arch()
+    const platform = os.platform()
+    const release = os.release()
+    const hostname = os.hostname()
+    const totalMem = (os.totalmem() / 1024 / 1024 / 1024).toFixed(2)
+    const freeMem = (os.freemem() / 1024 / 1024 / 1024).toFixed(2)
+    const uptime = formatUptime(os.uptime())
+    const cpus = os.cpus()
+    const cpuModel = cpus[0].model
+    const cpuCores = cpus.length
+    const botUptime = formatUptime(process.uptime())
 
-    // Enviar mensaje de prueba
-    await conn.reply(m.chat, '🍙🏓 *Calculando velocidad...* 📚✨', m, ctxOk)
+    // Información adicional de WhatsApp
+    const connectionState = conn.ws.readyState
+    const connectionStatus = getConnectionStatus(connectionState)
 
-    // Tiempo final
-    const end = Date.now()
-
-    // Calcular ping
-    const ping = end - start
-
-    // Información del bot
-    const botInfo = {
-      speed: ping < 200 ? '🚀 Excelente' : ping < 500 ? '⚡ Buena' : '🐢 Regular',
-      emoji: ping < 200 ? '🎯' : ping < 500 ? '🏓' : '⏳',
-      status: ping < 200 ? 'Óptimo' : ping < 500 ? 'Estable' : 'Lento'
-    }
-
-    // Obtener uso de memoria
-    const used = process.memoryUsage()
-    const memory = Math.round(used.rss / 1024 / 1024) + ' MB'
-
-    // Obtener tiempo de actividad
-    const uptime = process.uptime()
-    const hours = Math.floor(uptime / 3600)
-    const minutes = Math.floor((uptime % 3600) / 60)
-    const seconds = Math.floor(uptime % 60)
-    const uptimeString = `${hours}h ${minutes}m ${seconds}s`
-
-    // Mensaje del ping
-    const pingMessage = `
-${botInfo.emoji} **Itsuki Nakano - Estado del Sistema** 🍙📊
-
-🏓 *Velocidad:* ${ping} ms
-📊 *Conexión:* ${botInfo.speed}
-🟢 *Rendimiento:* ${botInfo.status}
-
-💾 *Memoria:* ${memory}
-⏱️ *Activo:* ${uptimeString}
-🖥️ *Plataforma:* ${process.platform}
-
-🍙 *"¡Sistema listo para ayudar!"* 📚✨
+    let result = `
+╭━━━〔 ⚡ 𝚂𝙸𝚂𝚃𝙴𝙼𝙰 𝙸𝙽𝙵𝙾 ⚡ 〕━━━╮
+┃ 📡 *Ping Real:* ${realPing} ms
+┃ 🔌 *Conexión:* ${connectionStatus}
+┃ 💻 *Plataforma:* ${platform} ${arch}
+┃ 🖥️ *Sistema:* ${release}
+┃ 🌐 *Hostname:* ${hostname}
+┃ 🔧 *CPU:* ${cpuModel.split('@')[0].trim()} (${cpuCores} núcleos)
+┃ 🗂️ *RAM:* ${freeMem} GB libres de ${totalMem} GB
+┃ ⏳ *Uptime Sistema:* ${uptime}
+┃ 🤖 *Uptime Bot:* ${botUptime}
+╰━━━━━━━━━━━━━━━━━━━╯
     `.trim()
 
-    // Enviar resultado directamente
-    await conn.reply(m.chat, pingMessage, m, ctxOk)
-
-  } catch (error) {
-    console.error('Error en ping:', error)
-    await conn.reply(m.chat, 
-      `❌ *Error en el diagnóstico*\n\n` +
-      `🍙 *"¡No pude calcular la velocidad!"*\n\n` +
-      `🔧 *Error:* ${error.message}\n\n` +
-      `📖 *¡Intenta nuevamente!* 🍱✨`,
-      m, ctxErr
-    )
-  }
+    // Editar el mensaje original con los resultados
+    await conn.sendMessage(m.chat, { 
+        text: result, 
+        edit: sentMsg.key 
+    })
 }
 
-handler.help = ['ping']
-handler.tags = ['main']
-handler.command = ['p', 'ping']
+function formatUptime(seconds) {
+    const days = Math.floor(seconds / (24 * 60 * 60))
+    seconds %= 24 * 60 * 60
+    const hours = Math.floor(seconds / (60 * 60))
+    seconds %= 60 * 60
+    const minutes = Math.floor(seconds / 60)
+    return `${days}d ${hours}h ${minutes}m`
+}
+
+function getConnectionStatus(state) {
+    const states = {
+        0: '🟡 Conectando',
+        1: '🟢 Conectado',
+        2: '🟠 Desconectando',
+        3: '🔴 Desconectado'
+    }
+    return states[state] || '❓ Desconocido'
+}
+
+handler.help = ['ping', 'info']
+handler.tags = ['main', 'info']
+handler.command = ['ping', 'speed', 'info'] // <- .p eliminado
 
 export default handler

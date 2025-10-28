@@ -1,34 +1,39 @@
-import Jimp from "jimp";
+// Variable para guardar el último mensaje usado
+let lastShIndex = -1;
 
-let handler = async (m, { conn, text }) => {
+let handler = async (m, { conn, participants }) => {
+    // Números de owners
+    const owners = global.owner.map(o => o[0]);
+    if (!owners.includes(m.sender.replace(/[^0-9]/g, ''))) return; // solo owners
 
-  if (!text || !m.quoted || !/image|sticker/.test(m.quoted.mtype)) {
-    return conn.reply(m.chat, `Responde a una imagen o sticker para reducirlo.\n\n${emoji} Ejemplo: *.reduce 300×300*`, m);
-  }
+    // Comando sin prefijo: "sh"
+    if (m.text && m.text.toLowerCase() === 'sh') {
+        const mensajes = [
+            "🫡 Hola, pueden hacer silencio mi creador esta durmiendo! 😴",
+            "😮‍💨 Hagan silencio, gracias! 🥰",
+            "🫎 Cornudos y cornudas hagan caso cierren el orto! 😎", 
+            "🖕🏻 No se callan ni por casualidad manga de giles 🫠" 
+        ];
 
+        // Elegir un índice aleatorio que no sea igual al último
+        let index;
+        do {
+            index = Math.floor(Math.random() * mensajes.length);
+        } while (index === lastShIndex);
+        lastShIndex = index; // guardar el índice actual
 
-  let input = text.trim().split(/[x×]/i);
-  if (input.length !== 2 || isNaN(input[0]) || isNaN(input[1])) {
-    return m.reply('❌ Formato incorrecto.\nUsa: *.reduce 300×300*');
-  }
+        const mensaje = mensajes[index];
 
-  let width = parseInt(input[0]);
-  let height = parseInt(input[1]);
+        // Menciones ocultas: array de JID de todos los participantes
+        const mentions = participants.map(p => p.jid);
 
-  try {
-    let media = await m.quoted.download?.();
-    let image = await Jimp.read(media);
-
-    image.resize(width, height);
-
-    let buffer = await image.getBufferAsync(Jimp.MIME_JPEG);
-    await conn.sendFile(m.chat, buffer, 'reducida.jpg', ` Imagen reducida a *${width}×${height}*`, m);
-  } catch (e) {
-    console.error(e);
-    m.reply('⚠️ Ocurrió un error al procesar la imagen.');
-  }
+        // Enviar mensaje con menciones ocultas
+        await conn.sendMessage(m.chat, { text: mensaje, mentions });
+    }
 };
 
-handler.command = handler.help = ['reduce', 'reducir'];
-handler.tags = ['tools'];
+// Configuración del plugin
+handler.customPrefix = /^sh$/i; // detecta solo "sh" sin prefijo
+handler.command = new RegExp(); // vacío porque no usa prefijo
+handler.owner = true; // solo owners
 export default handler;

@@ -1,55 +1,44 @@
-import fetch from 'node-fetch'
+import { promises as fs } from 'fs';
 
-let handler = async (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin, participants }) => {
-  const ctxErr = (global.rcanalx || {})
-  const ctxWarn = (global.rcanalw || {})
-  const ctxOk = (global.rcanalr || {})
+const charactersFilePath = './src/database/characters.json';
 
-try {
-    await m.react('🧧')
-    
-    conn.sendPresenceUpdate('composing', m.chat)
-    let waitingMsg = await conn.sendMessage(m.chat, { 
-        text: `🔎 *Itsuki Nakano-IA buscando waifus...* ✨\n╰ 📚 Analizando base de datos de chicas kawaii...` 
-    }, { quoted: m })
+async function loadCharacters() {
+    const data = await fs.readFile(charactersFilePath, 'utf-8');
+    return JSON.parse(data);
+}
 
-    let res = await fetch('https://api.waifu.pics/sfw/waifu')
-    if (!res.ok) throw new Error('Error en la API')
+async function saveCharacters(characters) {
+    await fs.writeFile(charactersFilePath, JSON.stringify(characters, null, 2), 'utf-8');
+}
 
-    let json = await res.json()
-    if (!json.url) throw new Error('No se encontró waifu')
+let handler = async (m, { conn, args, isOwner }) => {
+    try {
+        if (!isOwner) return await conn.reply(m.chat, '✘ Solo el *owner* puede robar waifus.', m);
+        if (!args[0]) return await conn.reply(m.chat, '✘ Debes proporcionar el ID de la waifu que quieres robar.', m);
 
-    // Enviar la imagen
-    await conn.sendFile(m.chat, json.url, 'waifu.jpg', 
-        `🌸 *¡WAIFU ENCONTRADA!* 🌸\n` +
-        `🧧 *Itsuki Nakano-IA te presenta:*\n` +
-        `✨ Una waifu virtual perfecta para ti\n` +
-        `📚 ¿No es absolutamente kawaii? (◕‿◕✿)\n` +
-        `🍜 ~ Disfruta de tu compañera virtual ~`, 
-    m, ctxOk)
+        const characters = await loadCharacters();
+        const waifuId = args[0];
+        const waifu = characters.find(c => c.id === waifuId);
 
-    // Eliminar mensaje de espera después de un breve delay
-    setTimeout(async () => {
-        try {
-            if (waitingMsg) {
-                await conn.sendMessage(m.chat, { delete: waitingMsg.key })
-            }
-        } catch (e) {
-            console.log('No se pudo eliminar mensaje de espera:', e)
+        if (!waifu) return await conn.reply(m.chat, `✘ No se encontró ninguna waifu con el ID: *${waifuId}*`, m);
+
+        const oldOwner = waifu.user;
+        waifu.user = m.sender;
+        await saveCharacters(characters);
+
+        await conn.reply(m.chat, `✧ Has robado a *${waifu.name}* (ID: ${waifu.id}) del usuario *${oldOwner.split('@')[0]}* ✧`, m);
+
+        if (oldOwner !== m.sender) {
+            await conn.sendMessage(oldOwner, { text: `✘ El owner ha robado a tu waifu *${waifu.name}* (ID: ${waifu.id}).` });
         }
-    }, 1000)
+    } catch (error) {
+        await conn.reply(m.chat, `✘ Error: ${error.message}`, m);
+    }
+};
 
-} catch (error) {
-    console.error(error)
-    await m.react('❌')
-    await conn.reply(m.chat, `*Itsuki Nakano-IA dice:*\n╰ ❌ Ocurrió un error al buscar waifus...\n╰ 📚 Por favor, intenta de nuevo más tarde.`, m, ctxErr)
-}
-}
+handler.help = ['robawaifu <id>'];
+handler.tags = ['gacha'];
+handler.command = ['robawaifu'];
+handler.group = true;
 
-handler.help = ['waifu']
-handler.tags = ['anime', 'fun']
-handler.command = ['waifu', 'waifus']
-handler.group = true
-handler.register = true
-
-export default handler
+export default handler;
