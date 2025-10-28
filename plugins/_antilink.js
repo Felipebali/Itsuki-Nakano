@@ -37,23 +37,30 @@ export async function before(m, { conn, isAdmin, isBotAdmin }) {
     const isIG = igLinkRegex.test(text)
     const isClash = clashLinkRegex.test(text)
 
-    // 🔸 Si manda un tagall
+    // 🧨 Si manda el link del TagAll prohibido
     if (isTagall) {
       await conn.sendMessage(m.chat, {
         text: `😮‍💨 Qué compartís el tagall inútil @${who.split('@')[0]}...`,
         mentions: [who],
       })
-      await conn.sendMessage(m.chat, { delete: m.key })
+      await conn.sendMessage(m.chat, {
+        delete: {
+          remoteJid: m.chat,
+          fromMe: false,
+          id: m.key.id,
+          participant: m.key.participant || who,
+        },
+      })
       return false
     }
 
-    // 🔸 Excepción: los dueños pueden mandar cualquier link (menos tagall)
+    // 🔸 Excepción: dueños pueden mandar cualquier link (menos tagall)
     if (owners.includes(number)) return true
 
-    // 🔸 Links permitidos: IG, canales, Clash o allowedLinks
+    // 🔸 Links permitidos
     if (isIG || isChannelLink || isClash || isAllowedLink) return true
 
-    // 🔸 Link del mismo grupo permitido (con cache)
+    // 🔸 Link del mismo grupo permitido (cache)
     let currentInvite = global.groupInviteCodes[m.chat]
     if (!currentInvite) {
       try {
@@ -81,18 +88,32 @@ export async function before(m, { conn, isAdmin, isBotAdmin }) {
           text: `⚠️ @${who.split('@')[0]}, no compartas links de otros grupos.`,
           mentions: [who],
         })
-        await conn.sendMessage(m.chat, { delete: m.key })
+        await conn.sendMessage(m.chat, {
+          delete: {
+            remoteJid: m.chat,
+            fromMe: false,
+            id: m.key.id,
+            participant: m.key.participant || who,
+          },
+        })
       }
       return false
     }
 
-    // 🔸 Otros links no permitidos → eliminar + aviso
+    // 🔸 Cualquier otro link no permitido → eliminar + aviso
     if (isAnyLink) {
       await conn.sendMessage(m.chat, {
         text: `⚠️ @${who.split('@')[0]}, tu link fue eliminado (no permitido).`,
         mentions: [who],
       })
-      await conn.sendMessage(m.chat, { delete: m.key })
+      await conn.sendMessage(m.chat, {
+        delete: {
+          remoteJid: m.chat,
+          fromMe: false,
+          id: m.key.id,
+          participant: m.key.participant || who,
+        },
+      })
       return false
     }
 
