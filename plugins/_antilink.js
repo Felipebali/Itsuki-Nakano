@@ -1,4 +1,4 @@
-// 📂 plugins/antilink.js
+// 📂 plugins/_antilink.js
 
 const groupLinkRegex = /chat\.whatsapp\.com\/(?:invite\/)?([0-9A-Za-z]{20,24})/i
 const channelLinkRegex = /whatsapp\.com\/channel\/([0-9A-Za-z]+)/i
@@ -10,20 +10,17 @@ const tagallLink = 'https://miunicolink.local/tagall-FelixCat'
 const igLinkRegex = /(https?:\/\/)?(www\.)?instagram\.com\/[^\s]+/i
 const clashLinkRegex = /(https?:\/\/)?(link\.clashroyale\.com)\/[^\s]+/i
 
-// 🔹 Cache de códigos de invitación por grupo
 if (!global.groupInviteCodes) global.groupInviteCodes = {}
-
-// 🔹 Números dueños exentos
 const owners = ['59896026646', '59898719147']
 
-export async function before(m, { conn, isAdmin, isBotAdmin }) {
+let handler = async function (m, { conn, isAdmin, isBotAdmin }) {
   try {
-    if (!m?.text) return true
-    if (!m.isGroup) return true
-    if (!isBotAdmin) return true
+    if (!m?.text) return !0
+    if (!m.isGroup) return !0
+    if (!isBotAdmin) return !0
 
     const chat = global.db.data.chats[m.chat]
-    if (!chat?.antiLink) return true
+    if (!chat?.antiLink) return !0
 
     const text = m.text
     const who = m.sender
@@ -51,14 +48,14 @@ export async function before(m, { conn, isAdmin, isBotAdmin }) {
           participant: m.key.participant || who,
         },
       })
-      return false
+      return !1
     }
 
     // 🔸 Excepción: dueños pueden mandar cualquier link (menos tagall)
-    if (owners.includes(number)) return true
+    if (owners.includes(number)) return !0
 
     // 🔸 Links permitidos
-    if (isIG || isChannelLink || isClash || isAllowedLink) return true
+    if (isIG || isChannelLink || isClash || isAllowedLink) return !0
 
     // 🔸 Link del mismo grupo permitido (cache)
     let currentInvite = global.groupInviteCodes[m.chat]
@@ -68,12 +65,11 @@ export async function before(m, { conn, isAdmin, isBotAdmin }) {
         global.groupInviteCodes[m.chat] = currentInvite
       } catch (e) {
         console.log('⚠️ No se pudo obtener el invite code del grupo:', e.message)
-        return true
+        return !0
       }
     }
 
-    // Si el link es del mismo grupo, se permite
-    if (isGroupLink && text.includes(currentInvite)) return true
+    if (isGroupLink && text.includes(currentInvite)) return !0
 
     // 🔸 Link de otro grupo → expulsar o eliminar
     if (isGroupLink && !text.includes(currentInvite)) {
@@ -97,10 +93,10 @@ export async function before(m, { conn, isAdmin, isBotAdmin }) {
           },
         })
       }
-      return false
+      return !1
     }
 
-    // 🔸 Cualquier otro link no permitido → eliminar + aviso
+    // 🔸 Cualquier otro link no permitido
     if (isAnyLink) {
       await conn.sendMessage(m.chat, {
         text: `⚠️ @${who.split('@')[0]}, tu link fue eliminado (no permitido).`,
@@ -114,12 +110,15 @@ export async function before(m, { conn, isAdmin, isBotAdmin }) {
           participant: m.key.participant || who,
         },
       })
-      return false
+      return !1
     }
 
-    return true
+    return !0
   } catch (err) {
     console.error('❌ Error en antilink:', err)
-    return true
+    return !0
   }
 }
+
+handler.before = handler
+export default handler
