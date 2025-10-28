@@ -1,4 +1,4 @@
-// 📂 plugins/_antilink.js
+// 📂 plugins/_antilink.js — versión corregida para FelixCat
 
 const groupLinkRegex = /chat\.whatsapp\.com\/(?:invite\/)?([0-9A-Za-z]{20,24})/i
 const channelLinkRegex = /whatsapp\.com\/channel\/([0-9A-Za-z]+)/i
@@ -22,25 +22,25 @@ let handler = async function (m, { conn, isAdmin, isBotAdmin }) {
     const chat = global.db.data.chats[m.chat]
     if (!chat?.antiLink) return !0
 
-    const text = m.text.trim()
+    const text = (m.text || '').trim()
     const who = m.sender
     const number = who.replace(/\D/g, '')
+
+    // 🧠 Ignorar comandos del bot o mensajes del bot
+    if (text.startsWith('.') || m.fromMe) return !0
 
     const isGroupLink = groupLinkRegex.test(text)
     const isChannelLink = channelLinkRegex.test(text)
     const isAnyLink = anyLinkRegex.test(text)
     const isAllowedLink = allowedLinks.test(text)
-    const isTagallLink = text.includes(tagallLink)
+    const isTagallLink = text.match(/https?:\/\/miunicolink\.local\/tagall-FelixCat/i)
     const isIG = igLinkRegex.test(text)
     const isClash = clashLinkRegex.test(text)
 
-    // 🧠 Ignorar comandos del bot o mensajes que empiezan con "."
-    if (text.startsWith('.')) return !0
-
-    // 🧨 Si manda el link del TagAll prohibido (no comando)
+    // 🧨 Bloquear solo si manda EL LINK REAL del tagall, no el comando .tagall
     if (isTagallLink && !text.startsWith('.tagall')) {
       await conn.sendMessage(m.chat, {
-        text: `😮‍💨 Qué compartís el tagall inútil @${who.split('@')[0]}...`,
+        text: `😮‍💨 Qué compartís el link del tagall, inútil @${who.split('@')[0]}...`,
         mentions: [who],
       })
       await conn.sendMessage(m.chat, {
@@ -54,7 +54,7 @@ let handler = async function (m, { conn, isAdmin, isBotAdmin }) {
       return !1
     }
 
-    // 🔸 Excepción: dueños pueden mandar cualquier link (menos tagall)
+    // 🔸 Excepción: dueños pueden mandar cualquier link (menos el del tagall)
     if (owners.includes(number)) return !0
 
     // 🔸 Links permitidos
