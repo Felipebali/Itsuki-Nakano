@@ -1,0 +1,267 @@
+{
+  "users": {
+    "59892682421@s.whatsapp.net": {
+      "exp": 44,
+      "limit": 10,
+      "registered": false,
+      "name": "bot 3.0",
+      "age": null,
+      "regTime": -1,
+      "afk": -1,
+      "afkReason": "",
+      "banned": false,
+      "useDocument": true,
+      "bank": 0,
+      "level": 0,
+      "premium": false,
+      "premiumTime": 0
+    },
+    "59892682421": {
+      "exp": 44,
+      "limit": 10,
+      "registered": false,
+      "name": "bot 3.0",
+      "age": null,
+      "regTime": -1,
+      "afk": -1,
+      "afkReason": "",
+      "banned": false,
+      "useDocument": true,
+      "bank": 0,
+      "level": 0,
+      "premium": false,
+      "premiumTime": 0
+    },
+    "59898719147@s.whatsapp.net": {
+      "exp": 150,
+      "limit": 10,
+      "registered": true,
+      "name": "Felipe 🐈‍⬛",
+      "age": 23,
+      "regTime": -1,
+      "afk": -1,
+      "afkReason": "",
+      "banned": false,
+      "useDocument": true,
+      "bank": 0,
+      "level": 0,
+      "premium": false,
+      "premiumTime": 0,
+      "bio": "Sin bio",
+      "sn": "SN-7N3M-1806",
+      "regDate": "2025-10-28T03:25:22.629Z",
+      "tokens": 20,
+      "coin": 40
+    },
+    "59898719147": {
+      "exp": 150,
+      "limit": 10,
+      "registered": true,
+      "name": "Felipe 🐈‍⬛",
+      "age": 23,
+      "regTime": -1,
+      "afk": -1,
+      "afkReason": "",
+      "banned": false,
+      "useDocument": true,
+      "bank": 0,
+      "level": 0,
+      "premium": false,
+      "premiumTime": 0,
+      "bio": "Sin bio",
+      "sn": "SN-7N3M-1806",
+      "regDate": "2025-10-28T03:25:22.629Z",
+      "tokens": 20,
+      "coin": 40
+    },
+    "59897142564@s.whatsapp.net": {
+      "exp": 15,
+      "limit": 10,
+      "registered": false,
+      "name": "Kathyy",
+      "age": null,
+      "regTime": -1,
+      "afk": -1,
+      "afkReason": "",
+      "banned": false,
+      "useDocument": true,
+      "bank": 0,
+      "level": 0,
+      "premium": false,
+      "premiumTime": 0
+    },
+    "59897142564": {
+      "exp": 15,
+      "limit": 10,
+      "registered": false,
+      "name": "Kathyy",
+      "age": null,
+      "regTime": -1,
+      "afk": -1,
+      "afkReason": "",
+      "banned": false,
+      "useDocument": true,
+      "bank": 0,
+      "level": 0,
+      "premium": false,
+      "premiumTime": 0
+    },
+    "153528572051483@s.whatsapp.net": {
+      "exp": 3,
+      "limit": 10,
+      "registered": false,
+      "name": "Kathyy",
+      "age": null,
+      "regTime": -1,
+      "afk": -1,
+      "afkReason": "",
+      "banned": false,
+      "useDocument": true,
+      "bank": 0,
+      "level": 0
+    },
+    "153528572051483": {
+      "exp": 3,
+      "limit": 10,
+      "registered": false,
+      "name": "Kathyy",
+      "age": null,
+      "regTime": -1,
+      "afk": -1,
+      "afkReason": "",
+      "banned": false,
+      "useDocument": true,
+      "bank": 0,
+      "level": 0
+    },
+    "59896636684@s.whatsapp.net": {
+      "exp": 1,
+      "limit": 10,
+      "registered": false,
+      "name": "Santii",
+      "age": null,
+      "regTime": -1,
+      "afk": -1,
+      "afkReason": "",
+      "banned": false,
+      "useDocument": true,
+      "bank": 0,
+      "level": 0
+    },
+    "59896636684": {
+      "exp": 1,
+      "limit": 10,
+      "registered": false,
+      "name": "Santii",
+      "age": null,
+      "regTime": -1,
+      "afk": -1,
+      "afkReason": "",
+      "banned": false,
+      "useDocument": true,
+      "bank": 0,
+      "level": 0
+    }
+  },
+  "chats": {
+    "120363422768748953@g.us": {
+      "isBanned": false,
+      "sAutoresponder": "",
+      "welcome": true,
+      "autolevelup": false,
+      "autoAceptar": false,
+      "autosticker": false,
+      "autoRechazar": false,
+      "autoresponder": false,
+      "detect": true,
+      "antiBot": false,
+      "antiBot2": false,
+      "modoadmin": false,
+      "antiLink": true,
+      "antiImg": false,
+      "reaction": false,
+      "nsfw": false,
+      "antifake": false,
+      "delete": false,
+      "expired": 0,
+      "antiLag": false,
+      "per": [
+        "59892682421@s.whatsapp.net"
+      ],
+      "antitoxic": false,
+      "bienvenida": true
+    },
+    "120363403999969270@g.us": {
+      "isBanned": false,
+      "sAutoresponder": "",
+      "welcome": true,
+      "autolevelup": false,
+      "autoAceptar": false,
+      "autosticker": false,
+      "autoRechazar": false,
+      "autoresponder": false,
+      "detect": true,
+      "antiBot": false,
+      "antiBot2": false,
+      "modoadmin": false,
+      "antiLink": true,
+      "antiImg": false,
+      "reaction": false,
+      "nsfw": false,
+      "antifake": false,
+      "delete": false,
+      "expired": 0,
+      "antiLag": false,
+      "per": [
+        "59892682421@s.whatsapp.net"
+      ],
+      "antitoxic": false,
+      "bienvenida": true
+    }
+  },
+  "settings": {
+    "59892682421@s.whatsapp.net": {
+      "autotypeDotOnly": false,
+      "self": false,
+      "autoread": false
+    }
+  },
+  "stats": {
+    "main-menu.js": {
+      "total": 3,
+      "success": 3,
+      "last": 1761621772583,
+      "lastSuccess": 1761621772583
+    },
+    "grupos-invocar.js": {
+      "total": 2,
+      "success": 2,
+      "last": 1761621740167,
+      "lastSuccess": 1761621740167
+    },
+    "_nable.js": {
+      "total": 2,
+      "success": 2,
+      "last": 1761621827427,
+      "lastSuccess": 1761621827427
+    },
+    "buscador-waifu.js": {
+      "total": 3,
+      "success": 3,
+      "last": 1761621895764,
+      "lastSuccess": 1761621895764
+    },
+    "registro.js": {
+      "total": 4,
+      "success": 4,
+      "last": 1761621922631,
+      "lastSuccess": 1761621922631
+    },
+    "anime-waifu.js": {
+      "total": 2,
+      "success": 2,
+      "last": 1761621939458,
+      "lastSuccess": 1761621939458
+    }
+  }
+}
